@@ -49,6 +49,7 @@
               <li class="nav-item"><a href="#about" class="nav-link text-uppercase link-scroll">About</a></li>
               <li class="nav-item"><a href="#services" class="nav-link text-uppercase link-scroll">Services</a></li>
               <li class="nav-item"><a href="#portfolio" class="nav-link text-uppercase link-scroll">Portfolio</a></li>
+              <li class="nav-item"><a href="#product" class="nav-link text-uppercase link-scroll">Product</a></li>
               <li class="nav-item"><a href="#team" class="nav-link text-uppercase link-scroll">Team</a></li>
               <li class="nav-item"><a href="#contact" class="nav-link text-uppercase link-scroll">Contact</a></li>
             </ul>
@@ -138,6 +139,40 @@
         <div class="col-lg-3 col-md-4 col-6 p-0"><a href="img/portfolio-6.jpg" data-lightbox="image-1" data-title="My caption" class="d-block"><img src="img/portfolio-6.png" alt="..." class="img-fluid d-block mx-auto"></a></div>
         <div class="col-lg-3 col-md-4 col-6 p-0"><a href="img/portfolio-7.jpg" data-lightbox="image-1" data-title="My caption" class="d-block"><img src="img/portfolio-7.png" alt="..." class="img-fluid d-block mx-auto"></a></div>
         <div class="col-lg-3 col-md-4 col-6 p-0"><a href="img/portfolio-8.jpg" data-lightbox="image-1" data-title="My caption" class="d-block"><img src="img/portfolio-8.png" alt="..." class="img-fluid d-block mx-auto"></a></div>
+      </div>
+    </section>
+    <!-- Portfolio Section-->
+    <section id="product" class="pb-0 bg-gray">
+      <header class="text-center mb-4">
+        <h2 class="lined text-uppercase mb-5">Product</h2>
+        <p>You can select product and checkout.</p>
+      </header>
+      <div class="container">
+        <table class="table table-bordered table-cart" id="cart">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Product</th>
+              <th width="100">Price/Hour</th>
+              <th width="200">Quantity(Hour)</th>
+              <th width="200">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="4" class="total-amount">Total Amount</th>
+              <td id="total_amount"></td>
+            </tr>
+            <tr>
+              <th colspan="4"></th>
+              <td class="text-center">
+                <button id="btn_checkout" type="button" class="btn btn-danger" disabled>Check Out</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </section>
     <!-- Team Section-->
@@ -233,5 +268,82 @@
     <script src="js/front.js"></script>
     <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <script>
+      var carts = [
+        {
+          img: 'img/webdev.png',
+          product: 'Web Development',
+          price: 40,
+          quantity: 0,
+          total: 0
+        },
+        {
+          img: 'img/appdev.png',
+          product: 'iOS/Android App Development',
+          price: 45,
+          quantity: 0,
+          total: 0
+        },
+        {
+          img: 'img/deeplearning.png',
+          product: 'Deep Learning',
+          price: 50,
+          quantity: 0,
+          total: 0
+        },
+        {
+          img: 'img/cg.png',
+          product: '3D CAD Development',
+          price: 45,
+          quantity: 0,
+          total: 0
+        },
+      ];
+      var total = 0;
+
+      function formatNumber(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function refreshTotal() {
+        total = 0;
+        for (var i = 0; i < carts.length; i ++) {
+          total += carts[i].total;
+        }
+        $('#total_amount').html('$' + formatNumber(total));
+
+        if (total > 0) {
+          $('#btn_checkout').removeAttr('disabled');
+        } else {
+          $('#btn_checkout').addAttr('disabled');
+        }
+      }
+
+      $(function() {
+        for (var i = 0; i < carts.length; i ++) {
+          var tr = "<tr no='" + i + "'>";
+          tr += "<td class='text-center'><img class='prod-img' src='" + carts[i].img + "'></td>";
+          tr += "<td>" + carts[i].product + "</td>";
+          tr += "<td class='number'>$" + formatNumber(carts[i].price) + "</td>";
+          tr += "<td class='number'><input type='number' class='form-control'></td>";
+          tr += "<td class='number total'></td>";
+          tr += "</tr>";
+          $('#cart tbody').append(tr);
+        }
+
+        $('#cart tbody input').change(function() {
+          var no = $(this).parents('tr').attr('no');
+          carts[no].quantity = $(this).val();
+          carts[no].total = carts[no].price * carts[no].quantity;
+          $(this).parents('tr').find('td.total').html('$' + formatNumber(carts[no].total));
+          refreshTotal();
+        });
+
+        $('#btn_checkout').click(function() {
+          document.location.href = "https://www.paypal.me/juyj";
+        });
+      });
+    </script>
   </body>
 </html>
